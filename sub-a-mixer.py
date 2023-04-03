@@ -72,7 +72,6 @@ user_prompt()
 
 # Setup function generator on scope as stimulus
 scope.write(':WGEN:FUNC SIN')
-scope.write(':WGEN:volt 5.0E-02')
 scope.write(':WGEN:FREQ 1.401E+07') # 10 kHz test
 scope.write(':WGEN:OUTP ON')
 
@@ -128,6 +127,8 @@ fc = 14e6
 fm = logspace(3, 6, N)
 freq = fc+fm
 
+input_ampl = 50e-3              # Amplitude of wave generator output
+
 print('The following message frequencies will be measured:', fm)
 
 # Initialize vectors for storing data
@@ -136,6 +137,7 @@ ampl_q = zeros(N, float)
 phdiff = zeros(N, float)
 
 scope.write(':TIMebase:SCAL +2.0E-04')
+scope.write(':WGEN:volt %e' % (input_ampl))
 scope.write(":WGEN:FREQ %e" % freq[0])
 
 print('Adjust the timebase and triggering so the signals are stable.')
@@ -151,7 +153,7 @@ for k in range(N2):
     ampl_i[k] = float(scope.query(':MEAS:VPP? CHAN1'))
     ampl_q[k] = float(scope.query(':MEAS:VPP? CHAN2'))
     phdiff[k] = float(scope.query(':MEAS:PHASe? CHAN1'))
-    print('Frequency point %d/%d, f=%.4f MHz: %f %f' % (k+1, N, freq[k]/1e6, ampl_i[k], ampl_q[k]))
+    print('Frequency point %d/%d, f=%.4f MHz: %f %f %f' % (k+1, N, freq[k]/1e6, ampl_i[k], ampl_q[k], phdiff[k]))
 
 scope.write(':TIMebase:SCAL +5.0E-05') 
 print("Re-adjust the voltage scale (if necessary) so the 2 signals occupy most of the screen.")
@@ -165,7 +167,7 @@ for k in range(N2, N3):
     ampl_i[k] = float(scope.query(':MEAS:VPP? CHAN1'))
     ampl_q[k] = float(scope.query(':MEAS:VPP? CHAN2'))
     phdiff[k] = float(scope.query(':MEAS:PHASe? CHAN1'))
-    print('Frequency point %d/%d, f=%.4f MHz: %f %f' % (k+1, N, freq[k]/1e6, ampl_i[k], ampl_q[k]))
+    print('Frequency point %d/%d, f=%.4f MHz: %f %f %f' % (k+1, N, freq[k]/1e6, ampl_i[k], ampl_q[k], phdiff[k]))
 
 scope.write(':TIMebase:SCAL +5.0E-06') 
 print("Re-adjust the voltage scale (if necessary) so the 2 signals occupy most of the screen.")
@@ -179,7 +181,7 @@ for k in range(N3, N):
     ampl_i[k] = float(scope.query(':MEAS:VPP? CHAN1'))
     ampl_q[k] = float(scope.query(':MEAS:VPP? CHAN2'))
     phdiff[k] = float(scope.query(':MEAS:PHASe? CHAN1'))
-    print('Frequency point %d/%d, f=%.4f MHz: %f %f' % (k+1, N, freq[k]/1e6, ampl_i[k], ampl_q[k]))
+    print('Frequency point %d/%d, f=%.4f MHz: %f %f %f' % (k+1, N, freq[k]/1e6, ampl_i[k], ampl_q[k], phdiff[k]))
 
 print('Done')
     
@@ -192,7 +194,7 @@ scope.close()
 # Save and plot data
 savetxt('iq.txt', (fm, ampl_i, ampl_q, phdiff));
 
-H2 = (ampl_i/50e-3)**2 + (ampl_q/50e-3)**2
+H2 = (ampl_i/input_ampl)**2 + (ampl_q/input_ampl)**2
 H2max = max(H2)
 
 fig, ax = subplots()
@@ -204,8 +206,8 @@ ax.set_title('Frequency response of LPF')
 savefig('lpf.png')
 
 fig, ax = subplots()
-ax.semilogx(fm, 20*log10(ampl_i/50e-3))
-ax.semilogx(fm, 20*log10(ampl_q/50e-3))
+ax.semilogx(fm, 20*log10(ampl_i/input_ampl))
+ax.semilogx(fm, 20*log10(ampl_q/input_ampl))
 ax.set_xlabel('Message frequency [Hz]');
 ax.set_ylabel('Conversion gain [dB]');
 ax.legend(('I', 'Q'))
@@ -225,4 +227,5 @@ ax.set_xlabel('Message frequency [Hz]')
 ax.set_ylabel('Phase shift between I and Q [deg]')
 ax.semilogx(fm, phdiff)
 ax.grid(True)
+ax.set_ylim((-200, 200))
 savefig('balance_phase.png')

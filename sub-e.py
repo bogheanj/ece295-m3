@@ -197,7 +197,7 @@ ax.set_xlabel('Frequency [MHz]')
 ax.set_ylabel('RF output power [dBW]')
 ax.grid(True)
 ax.set_title('PA Frequency Response for Vin = %.1f Vpp' % (drive_amplitude))
-savefig('pout_dBw.png')
+savefig('pout_dBW.png')
 
 # Plot Pout vs frequency (W)
 fig, ax = subplots()

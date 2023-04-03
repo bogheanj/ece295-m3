@@ -64,8 +64,6 @@ user_prompt()
 
 # Setup function generator on scope as stimulus
 scope.write(':WGEN:FUNC SIN')
-scope.write(':WGEN:volt 5.0E-02')
-scope.write(':WGEN:FREQ 1.4001E+07')
 scope.write(':WGEN:OUTP ON')
 
 # Set waveform generator output impedance to high Z
@@ -74,7 +72,6 @@ fxngen.write('UNIT:ANGL DEG')
 
 # Setup waveform generator
 fxngen.write('SOUR1:FUNCtion SIN')
-fxngen.write('SOUR1:FREQuency +1.4E+07')
 fxngen.write('SOUR1:VOLTage:HIGH +3.3')
 fxngen.write('SOUR1:VOLTage:LOW +0.0')
 fxngen.write('SOUR1:PHASe:SYNC')
@@ -82,7 +79,6 @@ fxngen.write('SOUR1:PHASe +0.0')
 fxngen.write('OUTPut1 ON')
 
 fxngen.write('SOUR2:FUNCtion SIN')
-fxngen.write('SOUR2:FREQuency +1.4E+07')
 fxngen.write('SOUR2:VOLTage:HIGH +3.3')
 fxngen.write('SOUR2:VOLTage:LOW +0.0')
 fxngen.write('SOUR2:PHASe:SYNC')
@@ -97,6 +93,14 @@ scope.write(':CHAN2:COUP AC')
 # Frequency sweep
 N = 51
 freq = arange(N)/(N-1)*16e6 + 4e6
+offset = 1e3                    # Offset between RF and LO frequencies
+input_ampl = 50e-3              # Amplitude of wave generator output
+
+# Set up instruments for first frequency point
+fxngen.write('SOUR1:FREQuency %e' % (14e6))
+fxngen.write('SOUR2:FREQuency %e' % (14e6))
+scope.write(':WGEN:FREQ %e' % (14e6+offset))
+scope.write(':WGEN:volt %e' % (input_ampl))
 
 print('The following frequency points will be measured:', freq)
 
@@ -123,7 +127,7 @@ scope.write(':TIMebase:SCAL +2.0E-04')
 for k in range(N):
     fxngen.write('SOUR1:FREQuency %e' % freq[k])
     fxngen.write('SOUR2:FREQuency %e' % freq[k])
-    scope.write(':WGEN:FREQ %e' % (freq[k]+1e3))
+    scope.write(':WGEN:FREQ %e' % (freq[k]+offset))
     time.sleep(0.5)
     #scope.write(':SINGle')
     ampl_i[k] = float(scope.query(':MEAS:VPP? CHAN1'))
@@ -142,7 +146,7 @@ scope.close()
 # Save and plot data
 savetxt('bpf.txt', (freq, ampl_i, ampl_q))
 
-H2 = (ampl_i/50e-3)**2 + (ampl_q/50e-3)**2
+H2 = (ampl_i/input_ampl)**2 + (ampl_q/input_ampl)**2
 
 fig, ax = subplots()
 ax.plot(freq/1e6, 10*log10(H2))
