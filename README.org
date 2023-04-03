@@ -1,3 +1,6 @@
 #+STARTUP: indent
 #+TITLE: ECE295 M3 Unit Testing Python Scripts
-README
+This repository contains various unit testing scripts for testing the ECE295 subsystems using PyVISA. All scripts assume you have the instruments connected on a LAN network according to the setup in ECE295 SL3. They also assume you have connected the instruments according to the [[file:M3 Test Wiring Diagrams.pdf][M3 wiring diagram]] appropriate for your subsystem. Please refer below for a detailed description of each script.
+* Subsystem A
+** sub-a-bpf.py
+This script measures the frequency response of the bandpass filter in Subsystem A.
