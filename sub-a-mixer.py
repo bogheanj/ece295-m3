@@ -76,7 +76,8 @@ scope.write(':WGEN:FREQ 1.401E+07') # 10 kHz test
 scope.write(':WGEN:OUTP ON')
 
 # Set waveform generator output impedance to high Z
-fxngen.write('OUTPUT:LOAD INF')
+fxngen.write('OUTPUT1:LOAD INF')
+fxngen.write('OUTPUT2:LOAD INF')
 fxngen.write('UNIT:ANGL DEG')
 
 # Setup waveform generator
