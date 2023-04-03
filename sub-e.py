@@ -24,8 +24,14 @@ def user_prompt():
 
 # Open instrument connection(s)
 rm = pyvisa.ResourceManager()
-scope = rm.open_resource('TCPIP0::192.168.2.253::hislip0::INSTR')
-supply = rm.open_resource('TCPIP0::192.168.2.251::5025::SOCKET')
+school_ip = True
+#school_ip = False
+if (school_ip):
+    scope = rm.open_resource('TCPIP0::192.168.0.253::hislip0::INSTR')
+    fxngen = rm.open_resource('TCPIP0::192.168.0.254::5025::SOCKET')
+else:
+    scope = rm.open_resource('TCPIP0::192.168.2.253::hislip0::INSTR')
+    fxngen = rm.open_resource('TCPIP0::192.168.2.254::5025::SOCKET')
 
 # Define string terminations and timeouts
 scope.write_termination = '\n'
@@ -71,7 +77,7 @@ Iidle = float(supply.query('MEAS:CURR? CH2'))
 Pidle = V*Iidle
 
 # Set wavegen amplitude and enable
-drive_amplitude = 10.0          # Set to input drive amplitude required
+drive_amplitude = 1.0          # Set to input drive amplitude required
 scope.write(':WGEN:volt %e' % (drive_amplitude))
 scope.write(':WGEN:OUTP ON')
 
