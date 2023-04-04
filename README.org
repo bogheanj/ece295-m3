@@ -24,11 +24,11 @@ To use the script, run it and follow the instructions. When asked to set the vol
 1. The signals fill as much of the vertical scale as possible, for maximum resolution;
 2. The signals are not clipped; and
 3. The scope is triggering cleanly on the signal.
-Not satisfying any of these may lead to suboptimal or erroneus measurements.
+Not satisfying any of these may lead to sub-optimal or erroneous measurements.
 
 The overall conversion gain (in dB) of the subsystem as a function of frequency (i.e. the frequency response of the module) is stored in a file ~bpf.png~. The raw data (frequency, I amplitude, and Q amplitude) is saved in a file ~bpf.txt~.
 
-The resulting frequency response should resemble the plot below. A succesful plot should have the correct corner frequencies as well as sufficient gain as specified in the ICD.
+The resulting frequency response should resemble the plot below. A successful plot should have the correct corner frequencies as well as sufficient gain as specified in the ICD.
 #+html: <p align="center"><img src="PNG/bpf.png" width=800/></p>
 ** sub-a-mixer.py
 This script measures the frequency response of the lowpass filter succeeding the mixer in Subsystem A. It does so by varying the RF input frequency while keeping the LO frequency constant. The RF frequency is sinusoid whose frequency is equal to 14 MHz plus the a low-frequency equal to that of a sinusoidal message signal, which effectively generates an upper sideband RF input signal at the output of the oscilloscope's function generator. In this way, the amplitudes of the I and Q outputs of Subsystem A are proportional to the frequency response of the filter.
@@ -66,6 +66,23 @@ A successful demodulator should produce outputs similar to the plots shown below
 #+html: <p align="center"><img src="PNG/demod.png" width=800/></p>
 #+html: <p align="center"><img src="PNG/rejection.png" width=800/></p>
 * Subsystem C: sub-c.py
+This script is intended for testing the remote control of Subsystem C using CAT commands, though it could be adapted to test Subsystem C when controlled from the front panel. It first commands Subsystem C to produce LO output signals in the 8-16 MHz range, checking the signals on the oscilloscope. At the end, it checks control of the TX and RX switch.
+
+Before starting the script, edit the file and change the string variable ~comport~ to be set to the COM port the USB-UART adapter assumes when plugged into the PC you are using (you can check this using the Device Manager). The script will throw an error message if it cannot find the USB-UART adapter.
+
+The script is otherwise self-explanatory, requiring only a connection to the oscilloscope for testing. The frequency variable ~freq~ or the number of points ~N~ can be edited if desired.
+
+Note that during the TX/RX switch test, continuity between the ANT, RX_SIG, and PA_OUT signals must be checked manually, as this is not measured remotely using any instruments.
+
+The script produces the following plots, with raw data stored in ~freq.txt~.
+1. ~freq.png~ plots the measured output frequency of both channels as a function of the command frequency issued with the ~FA~ CAT command;
+2. ~freq_error.png~ plots the error between the output frequencies produced by each channel, and the command frequency; and
+3. ~phase.png~ plots the phase difference between LO_0 and LO_90 as a function of the command frequency. It should be close to $-90^\circ$ regardless of the command frequency.
+
+An operational subsystem should produce plots similar to the plots shown below.
+#+html: <p align="center"><img src="PNG/freq.png" width=800/></p>
+#+html: <p align="center"><img src="PNG/freq_error.png" width=800/></p>
+#+html: <p align="center"><img src="PNG/phase.png" width=800/></p>
 * Subsystem E: sub-e.py
 This script carries out various tests on the power amplifier and lowpass filter. It does so by exciting the PA with a fixed-amplitude sinusoidal signal. The amplitude of this signal is controlled by a single variable, ~drive_amplitude~, within the script. It should nominally be set to 1.0 (since the ICD specified the input signal must be 1.0 Vpp), but you can override this if you find your subsystem needs a large amplitude signal in order to work.
 
