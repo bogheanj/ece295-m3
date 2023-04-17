@@ -29,8 +29,8 @@ def user_abort():
         
 # Open instrument connection(s)
 rm = pyvisa.ResourceManager()
-school_ip = True
-#school_ip = False
+#school_ip = True
+school_ip = False
 if (school_ip):
     scope = rm.open_resource('TCPIP0::192.168.0.253::hislip0::INSTR')
     fxngen = rm.open_resource('TCPIP0::192.168.0.254::5025::SOCKET')
@@ -91,7 +91,9 @@ scope.write(':CHAN2:COUP AC')
 
 # Frequency sweep
 N = 41
-freq = arange(N)/(N-1)*8e3 + 6e3
+fc = 12.2e3
+#freq = arange(N)/(N-1)*8e3 + 6e3
+freq = arange(N)/(N-1)*8e3 + 8.2e3
 
 print('The following frequency points will be measured:', freq)
 
@@ -103,7 +105,7 @@ scope.write(':TRIG:EDGE:SOURce CHAN2')
 print(scope.query(':TRIGger:EDGE:LEVel?'))
 
 print('LSB MEASUREMENT')
-print('You should have a strong LSB signal on CH2 at %.1f kHz.' % ((10e3-freq[0])/1e3))
+print('You should have a strong LSB signal on CH2 at %.1f kHz.' % ((fc-freq[0])/1e3))
 print('Adjust the voltage scale on CH1 (and CH2) so they are identical')
 print('and the desired signal (USB or LSB) occupies most of the screen.')
 print('Adjust the triggering so the signals are stable.')
@@ -125,6 +127,7 @@ if (scale1 != scale2):
 for k in range(N):
     fxngen.write('SOUR1:FREQuency %e' % freq[k])
     fxngen.write('SOUR2:FREQuency %e' % freq[k])
+    time.sleep(0.5)
     fxngen.write('SOUR2:PHASe:SYNC')
     time.sleep(1)
     #ampl_usb[k] = float(scope.query(':MEAS:VRMS? CHAN1'))
