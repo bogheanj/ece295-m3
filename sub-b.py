@@ -30,7 +30,7 @@ def user_abort():
 # Open instrument connection(s)
 rm = pyvisa.ResourceManager()
 #school_ip = True
-school_ip = False
+school_ip = True
 if (school_ip):
     scope = rm.open_resource('TCPIP0::192.168.0.253::hislip0::INSTR')
     fxngen = rm.open_resource('TCPIP0::192.168.0.254::5025::SOCKET')
@@ -91,9 +91,10 @@ scope.write(':CHAN2:COUP AC')
 
 # Frequency sweep
 N = 41
-fc = 12.2e3
-#freq = arange(N)/(N-1)*8e3 + 6e3
-freq = arange(N)/(N-1)*8e3 + 8.2e3
+fc = 10e3
+#fc = 12.2e3
+freq = arange(N)/(N-1)*8e3 + 6e3
+#freq = arange(N)/(N-1)*8e3 + 8.2e3
 
 print('The following frequency points will be measured:', freq)
 
