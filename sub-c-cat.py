@@ -82,19 +82,19 @@ print('AI COMMAND')
 checkcat('AI1;', 'AI;', 'AI1;')
 checkcat('AI0;', 'AI;', 'AI0;')
 
-print('ID COMMAND')
-checkcatq('ID;', '0650;')
+print('ID QUERY')
+checkcatq('ID;', 'ID0650;')
 
-print('MD COMMAND')
+print('MD QUERY')
 checkcatq('MD0;', 'MD0C;')
 
-print('SH COMMAND')
+print('SH QUERY')
 checkcatq('SH0;', 'SH0000;')
 
-print('NA COMMAND')
+print('NA QUERY')
 checkcatq('NA0;', 'NA00;')
 
-print('NA COMMAND')
+print('IF QUERY')
 checkcatq('IF;', 'IF001014074000+000000C00000;')
 
 print('ST COMMAND')
