@@ -91,6 +91,8 @@ The script sweeps the frequency of the applied signal and tracks the magnitude a
 3. ~mod_balance_phase.png~ plots the phase difference between the I and Q channel; ideally, Q should lag I by 90 degrees, i.e., $\angle(I/Q) = -90^\circ$.
 
 The raw data is also stored in a file ~mod_iq.txt~.
+
+There is no Python script for checking the integrity of the message signal itself. This must be done using WSJT-X, using the procedures described in the M3 testing document.
 * Subsystem F: sub-f.py
 This script carries out various tests on the power amplifier and lowpass filter. It does so by exciting the PA with a fixed-amplitude sinusoidal signal. The amplitude of this signal is controlled by a single variable, ~drive_amplitude~, within the script. It should nominally be set to 1.0 (since the ICD specified the input signal must be 1.0 Vpp), but you can override this if you find your subsystem needs a large amplitude signal in order to work.
 
