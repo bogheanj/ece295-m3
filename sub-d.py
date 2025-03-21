@@ -97,7 +97,7 @@ print('About to initiate frequency sweep.')
 N = 40
 freq = arange(N)*100 + 100
 
-input_ampl = 1.0              # Amplitude of wave generator output
+input_ampl = 0.316*sqrt(2)              # Amplitude of wave generator output
 
 print('The following message frequencies will be measured:', freq)
 
