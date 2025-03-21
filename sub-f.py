@@ -26,8 +26,8 @@ def user_prompt():
 
 # Open instrument connection(s)
 rm = pyvisa.ResourceManager()
-#school_ip = True
-school_ip = False
+school_ip = True
+#school_ip = False
 if (school_ip):
     scope = rm.open_resource('TCPIP0::192.168.0.253::hislip0::INSTR')
     supply = rm.open_resource('TCPIP0::192.168.0.251::5025::SOCKET')
