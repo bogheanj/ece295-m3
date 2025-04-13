@@ -159,7 +159,9 @@ for k in range(N2):
     #scope.write(':SINGle')
     ampl_i[k] = float(scope.query(':MEAS:VPP? CHAN1'))
     ampl_q[k] = float(scope.query(':MEAS:VPP? CHAN2'))
-    phdiff[k] = float(scope.query(':MEAS:PHASe? CHAN1'))
+    phase1 = float(scope.query(':MEAS:PHASe? CHAN1'))
+    phase2 = float(scope.query(':MEAS:PHASe? CHAN2'))
+    phdiff[k] = phase1 - phase2
     print('Frequency point %d/%d, f=%.4f MHz: %f %f %f' % (k+1, N, freq[k]/1e6, ampl_i[k], ampl_q[k], phdiff[k]))
 
 scope.write(':TIMebase:SCAL +5.0E-05') 
@@ -173,7 +175,9 @@ for k in range(N2, N3):
     #scope.write(':SINGle')
     ampl_i[k] = float(scope.query(':MEAS:VPP? CHAN1'))
     ampl_q[k] = float(scope.query(':MEAS:VPP? CHAN2'))
-    phdiff[k] = float(scope.query(':MEAS:PHASe? CHAN1'))
+    phase1 = float(scope.query(':MEAS:PHASe? CHAN1'))
+    phase2 = float(scope.query(':MEAS:PHASe? CHAN2'))
+    phdiff[k] = phase1 - phase2
     print('Frequency point %d/%d, f=%.4f MHz: %f %f %f' % (k+1, N, freq[k]/1e6, ampl_i[k], ampl_q[k], phdiff[k]))
 
 scope.write(':TIMebase:SCAL +5.0E-06') 
@@ -187,7 +191,9 @@ for k in range(N3, N):
     #scope.write(':SINGle')
     ampl_i[k] = float(scope.query(':MEAS:VPP? CHAN1'))
     ampl_q[k] = float(scope.query(':MEAS:VPP? CHAN2'))
-    phdiff[k] = float(scope.query(':MEAS:PHASe? CHAN1'))
+    phase1 = float(scope.query(':MEAS:PHASe? CHAN1'))
+    phase2 = float(scope.query(':MEAS:PHASe? CHAN2'))
+    phdiff[k] = phase1 - phase2
     print('Frequency point %d/%d, f=%.4f MHz: %f %f %f' % (k+1, N, freq[k]/1e6, ampl_i[k], ampl_q[k], phdiff[k]))
 
 print('Done')
